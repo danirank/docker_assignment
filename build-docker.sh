@@ -1,0 +1,1 @@
+docker build -f ScanTrackNode/Dockerfile -t scantrack .
