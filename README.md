@@ -135,6 +135,7 @@ az container create \
   --image acrscantrack[dittnamn].azurecr.io/scantrack-node:v1 \
   --ports 8080 \
   --ip-address Public \
+  --dns-name-label "daniel
   --registry-login-server acrscantrack[dittnamn].azurecr.io \
   --registry-username acrscantrack[dittnamn] \
   --registry-password "$ACR_PASSWORD" \

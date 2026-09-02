@@ -14,7 +14,7 @@ builder.Services.AddHttpClient();
 var csvPath = Path.Combine(AppContext.BaseDirectory, "data", "cities.csv");
 var graph = GraphLoader.Load(csvPath);
 builder.Services.AddSingleton(new DijkstraService(graph));
-
+builder.Services.AddHostedService<HeartbeatService>();
 builder.Services.AddSingleton<NodeRegistry>();
 builder.Services.AddSingleton<PackageForwarder>();
 

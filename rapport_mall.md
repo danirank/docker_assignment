@@ -1,9 +1,9 @@
 # Rapport — ScanTrack Node
 
-**Namn:**
-**Stad (nod):**
-**Datum:**
-**Kurs:** Administrera molnlösningar — ITHS
+**Namn:** Daniel,
+**Stad (nod):**  Karlstad,
+**Datum:**  2026-09-01,
+**Kurs:**  Administrera molnlösningar — ITHS
 
 ---
 
@@ -11,6 +11,8 @@
 
 *Beskriv steg för steg hur du fick upp din nod i molnet.
 Vad körde du, i vilken ordning, och varför?*
+
+
 
 ### Hur du byggde och testade Docker-imagen lokalt
 
@@ -36,8 +38,8 @@ Vad körde du, i vilken ordning, och varför?*
 
 *Nämn tre konkreta saker du inte kunde innan den här veckan.*
 
-1.
-2.
+1. Skapa ACR och ACI 
+2. 
 3.
 
 ---

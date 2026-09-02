@@ -1,3 +1,4 @@
+#!/bin/bash
 docker run -p 8080:8080 \
     -e CITY_NAME=Karlstad \
     -e NODE_URL=http://localhost:8080 \
