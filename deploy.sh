@@ -63,6 +63,6 @@ az container create \
   --registry-username "$ACR_NAME" \
   --registry-password "$ACR_PASSWORD" \
   --environment-variables \
-    CITY_NAME="$CITY" \
+    CITY_NAME="Karlstad" \
     NODE_URL="$NODE_URL" \
     REGISTRY_URL="$REGISTRY_URL"
