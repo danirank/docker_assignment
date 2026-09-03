@@ -37,7 +37,7 @@ Docker-imagen byggdes med:
 ./build-docker.sh
 ```
 
-Som ihåller följande kommando: 
+Som innehåller följande kommando: 
 
 ```bash
 #!/bin/bash
@@ -51,7 +51,7 @@ docker build \
 docker image ls scantrack-node
 ```
 
-Efter bygget körde jag 
+Efter bygget startade jag docker desktop och körde 
 
 ```bash
 ./run-docker.sh
@@ -71,6 +71,11 @@ Jag verifierade att Imagen körde genom /status -endpoint.
 Svaret från endpointen visade att noden var igång och kunde ta emot HTTP-anrop.
 
 ![status-respone-local](/images/status_local.png)
+
+Jag testade även /route?from=karlstad&to=göteborg 
+
+![route-local](/images/route_local.png)
+
 
 ### Hur du publicerade imagen till ACR
 
@@ -157,9 +162,6 @@ Utifrån namnen på variablerna går det att se att noden får information om vi
 Test av /status 
 
 ![status-respone-local](/images/status.png)
-
-
-
 
 ---
 

@@ -30,9 +30,10 @@ public class PackageForwarder
     //   6. Skicka: await http.PostAsync($"{url}/paket", content)
     //   7. Logga att du skickade (stad + packageId): _logger.LogInformation(...)
     //   8. Returnera response.IsSuccessStatusCode
+    //DONE
     public async Task<bool> ForwardAsync(Package package, string nextCity)
     {
-        // TODO: implementera vidarebefordran
+        // Done: implementera vidarebefordran
 
         var nodes = await _registry.GetNodesAsync();
         if (!nodes.TryGetValue(nextCity, out var url))
@@ -52,6 +53,6 @@ public class PackageForwarder
 
         return response.IsSuccessStatusCode;
 
-        //throw new NotImplementedException("Implementera ForwardAsync — se kommentarerna ovan");
+       
     }
 }

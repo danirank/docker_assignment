@@ -4,9 +4,9 @@ using Microsoft.Extensions.Hosting;
 namespace ScanTrackNode.Services;
 
 public class HeartbeatService(
-    IHttpClientFactory httpClientFactory,
+    NodeRegistry registry,
     IConfiguration configuration,
-    ILogger<HeartbeatService> logger)
+    ILogger<HeartbeatService> _logger)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
@@ -19,7 +19,7 @@ public class HeartbeatService(
             string.IsNullOrWhiteSpace(nodeUrl) ||
             string.IsNullOrWhiteSpace(registryUrl))
         {
-            logger.LogError("Miljövariabler för heartbeat saknas.");
+            _logger.LogError("Miljövariabler för heartbeat saknas.");
             return;
         }
 
@@ -30,31 +30,17 @@ public class HeartbeatService(
                 // Väntar en timme innan nästa heartbeat
                 await Task.Delay(TimeSpan.FromHours(1), ct);
 
-                var client = httpClientFactory.CreateClient();
+                _logger.LogInformation("Skickar heartbeat till {Registry}", registryUrl);
 
-                var response = await client.PostAsJsonAsync(
-                    $"{registryUrl.TrimEnd('/')}/nodes",
-                    new
-                    {
-                        city,
-                        url = nodeUrl
-                    },
-                    ct);
-
-                response.EnsureSuccessStatusCode();
-
-                logger.LogInformation(
-                    "Heartbeat skickad för {City} till registryt.",
-                    city);
+                await registry.RegisterSelfAsync();
             }
-            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            catch (TaskCanceledException)
             {
-                // Normalt när containern stoppas
+                // Ignorera TaskCanceledException som kastas när tjänsten stoppas
             }
             catch (Exception ex)
             {
-                // Ett tillfälligt fel ska inte stoppa tjänsten permanent
-                logger.LogError(ex, "Kunde inte skicka heartbeat.");
+                _logger.LogError(ex, "Kunde inte skicka heartbeat till {Registry}", registryUrl);
             }
         }
     }
