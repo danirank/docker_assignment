@@ -15,6 +15,8 @@ public class PaketController : ControllerBase
     private readonly IConfiguration _config;
     private readonly ILogger<PaketController> _logger;
 
+    private readonly HeartbeatService _heartbeatService;
+
     private static readonly List<Package> _received = new();
 
     public PaketController(
@@ -22,6 +24,7 @@ public class PaketController : ControllerBase
         PackageForwarder forwarder,
         NodeRegistry registry,
         IConfiguration config,
+        HeartbeatService heartbeatService,
         ILogger<PaketController> logger)
     {
         _dijkstra = dijkstra;
@@ -29,6 +32,27 @@ public class PaketController : ControllerBase
         _registry = registry;
         _config = config;
         _logger = logger;
+        _heartbeatService = heartbeatService;
+    }
+
+    [HttpPost("/forceheartbeat")]
+    public async Task<IActionResult> SendHeartbeat()
+    {
+        try
+        {
+            var result = await _heartbeatService.SendHeartbeatAsync();
+
+            return result
+                ? Ok(new { status = "heartbeat skickat" })
+                : BadRequest(new { status = "heartbeat nekades" });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                error = ex.Message
+            });
+        }
     }
 
     [HttpPost]

@@ -5,7 +5,7 @@ LOCATION="northeurope"
 CITY="karlstad"
 
 NODE_NAME="scantrack-${CITY}-daniel"
-DNS_LABEL="scantracknode-daniel"
+
 
 RG=$(az group list \
   --query "[].name" \
@@ -21,7 +21,7 @@ RG_ID=$(az group show \
 
 ACR_NAME="acrscantrack${RG_ID}"
 IMAGE="${ACR_NAME}.azurecr.io/scantrack-node:v1"
-NODE_URL="http://${DNS_LABEL}.${LOCATION}.azurecontainer.io:8080"
+NODE_URL="http://${NODE_NAME}.${LOCATION}.azurecontainer.io:8080"
 
 # Skapa Container Registry
 az acr create \
@@ -58,7 +58,7 @@ az container create \
   --memory 1.5 \
   --ports 8080 \
   --ip-address Public \
-  --dns-name-label "$DNS_LABEL" \
+  --dns-name-label "$NODE_NAME" \
   --registry-login-server "${ACR_NAME}.azurecr.io" \
   --registry-username "$ACR_NAME" \
   --registry-password "$ACR_PASSWORD" \

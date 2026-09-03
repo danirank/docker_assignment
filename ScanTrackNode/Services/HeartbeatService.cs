@@ -3,45 +3,52 @@ using Microsoft.Extensions.Hosting;
 
 namespace ScanTrackNode.Services;
 
-public class HeartbeatService(
-    NodeRegistry registry,
-    IConfiguration configuration,
-    ILogger<HeartbeatService> _logger)
-    : BackgroundService
+public class HeartbeatService : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken ct)
+    private readonly NodeRegistry _registry;
+    private readonly ILogger<HeartbeatService> _logger;
+    private DateTime _lastHeartbeat = DateTime.MinValue;
+    private static readonly TimeSpan MinInterval = TimeSpan.FromMinutes(10);
+
+    public HeartbeatService(NodeRegistry registry, ILogger<HeartbeatService> logger)
     {
-        var city = configuration["CITY_NAME"];
-        var nodeUrl = configuration["NODE_URL"];
-        var registryUrl = configuration["REGISTRY_URL"];
+        _registry = registry;
+        _logger = logger;
+    }
 
-        if (string.IsNullOrWhiteSpace(city) ||
-            string.IsNullOrWhiteSpace(nodeUrl) ||
-            string.IsNullOrWhiteSpace(registryUrl))
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogError("Miljövariabler för heartbeat saknas.");
-            return;
-        }
+            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
 
-        while (!ct.IsCancellationRequested)
-        {
-            try
-            {
-                // Väntar en timme innan nästa heartbeat
-                await Task.Delay(TimeSpan.FromHours(1), ct);
-
-                _logger.LogInformation("Skickar heartbeat till {Registry}", registryUrl);
-
-                await registry.RegisterSelfAsync();
-            }
-            catch (TaskCanceledException)
-            {
-                // Ignorera TaskCanceledException som kastas när tjänsten stoppas
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Kunde inte skicka heartbeat till {Registry}", registryUrl);
-            }
+            await SendHeartbeatAsync();
         }
     }
+    // Anropas både av den schemalagda loopen och av /forceheartbeat
+    public async Task<bool> SendHeartbeatAsync()
+    {
+        _lastHeartbeat = DateTime.UtcNow;
+        _logger.LogInformation("Skickar heartbeat...");
+        await _registry.RegisterSelfAsync();
+        return true;
+    }
+
+    // Anropas av /forceheartbeat — nekar om det var för nyligen
+    public async Task<bool> TryForceHeartbeatAsync()
+    {
+        if (DateTime.UtcNow - _lastHeartbeat < MinInterval)
+        {
+            _logger.LogWarning("Forcerat heartbeat nekat — för kort tid sedan senaste.");
+            return false;
+        }
+
+        await SendHeartbeatAsync();
+        return true;
+    }
+
 }
+
+
+
+    

@@ -2,6 +2,7 @@
 set -e
 
 docker build \
+  --no-cache -t scantrack-node \
   -f ScanTrackNode/Dockerfile \
   -t scantrack-node:latest \
   .
