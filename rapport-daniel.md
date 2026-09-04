@@ -75,12 +75,13 @@ Livelogg vid skickande och mottagande av paket
 ## Individuell reflektion
 
 - **Vad var svårast?**
-  Det svåraste var att få alla delar i lösningen att fungera tillsammans. Att bygga själva containern var relativt tydligt, men när noden skulle kommunicera med registret och andra noder blev det fler saker att hålla reda på. Det kunde till exempel vara svårt att veta om ett fel berodde på koden, Docker-imagen, miljövariablerna eller själva deploymenten i Azure. Felsökningen blev därför en viktig del av arbetet.
+  Det svåraste var egentligen inte någon enskild teknisk del, utan att i början sätta sig in i repot och förstå hur koden och de olika delarna hängde ihop. Jag valde därför att lägga tid på att först få en bra överblick över projektets struktur och flöde innan jag började göra ändringar. Det gjorde resten av arbetet enklare eftersom jag då hade en tydligare bild av vad varje del gjorde och hur de påverkade varandra.
 
 - **Vad förstår du nu som du inte förstod innan?**
   Jag förstår nu bättre hur Docker-images och containers fungerar, hur miljövariabler skickas in till en container och hur en container publiceras via ACR och körs i ACI. Jag har också fått en tydligare förståelse för hela flödet från lokal kod till en körande tjänst i molnet. Tidigare såg jag Docker, ACR och ACI mer som separata delar, men nu förstår jag bättre hur de hänger ihop i samma deploymentflöde.
 
 - **Vad skulle du ha gjort annorlunda?**
   Jag hade testat varje del mer separat innan jag kopplade ihop hela lösningen. Det hade gjort det enklare att avgöra var ett fel faktiskt låg och minskat tiden som gick åt till felsökning. Jag hade även använt en user-assigned Managed Identity för att låta ACI hämta imagen från ACR, i stället för att skicka med användarnamn och lösenord till registret i skriptet. Det hade varit en säkrare lösning eftersom man då slipper hantera dessa autentiseringsuppgifter direkt i deploymentflödet.
+  
 - **Hur planerades projektet?**
   Jag ville först få en övergripande bild av hur hela lösningen skulle fungera och hur de olika delarna hängde ihop. Därefter arbetade jag stegvis och började med att få noden att fungera lokalt innan jag flyttade ut den i molnet. Arbetet delades upp i mindre delar: bygga och testa Docker-imagen, publicera den till ACR, starta noden i ACI, registrera noden mot registret och till sist testa kommunikationen. Det gjorde det lättare att fokusera på en del i taget och successivt bygga upp hela lösningen.
