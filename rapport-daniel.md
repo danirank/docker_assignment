@@ -32,7 +32,7 @@ Azure Container Instance (ACI)
 Publikt DNS-namn / NODE_URL
 ```
 
-Containern får även miljövariablerna `CITY_NAME`, `NODE_URL` och `REGISTRY_URL` när den startas.
+Containern får även miljövariablerna `CITY` och `NODE_URL` när den startas.
 
 ---
 
@@ -82,6 +82,6 @@ Livelogg vid skickande och mottagande av paket
 
 - **Vad skulle du ha gjort annorlunda?**
   Jag hade testat varje del mer separat innan jag kopplade ihop hela lösningen. Det hade gjort det enklare att avgöra var ett fel faktiskt låg och minskat tiden som gick åt till felsökning. Jag hade även använt en user-assigned Managed Identity för att låta ACI hämta imagen från ACR, i stället för att skicka med användarnamn och lösenord till registret i skriptet. Det hade varit en säkrare lösning eftersom man då slipper hantera dessa autentiseringsuppgifter direkt i deploymentflödet.
-  
+
 - **Hur planerades projektet?**
   Jag ville först få en övergripande bild av hur hela lösningen skulle fungera och hur de olika delarna hängde ihop. Därefter arbetade jag stegvis och började med att få noden att fungera lokalt innan jag flyttade ut den i molnet. Arbetet delades upp i mindre delar: bygga och testa Docker-imagen, publicera den till ACR, starta noden i ACI, registrera noden mot registret och till sist testa kommunikationen. Det gjorde det lättare att fokusera på en del i taget och successivt bygga upp hela lösningen.
